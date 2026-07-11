@@ -49,6 +49,8 @@ function AttendanceBalancer() {
       errors.conducted = 'Classes conducted so far must be greater than zero.';
     } else if (condVal < 0 || !Number.isInteger(condVal)) {
       errors.conducted = 'Please enter a valid positive integer.';
+    } else if (condVal > totalClasses) {
+      errors.conducted = `Classes conducted so far cannot exceed the total classes (${totalClasses}).`;
     }
 
     if (missed === '' || isNaN(missVal)) {
@@ -57,6 +59,8 @@ function AttendanceBalancer() {
       errors.missed = 'Classes missed cannot be negative.';
     } else if (!Number.isInteger(missVal)) {
       errors.missed = 'Please enter a valid integer for classes missed.';
+    } else if (missVal > totalClasses) {
+      errors.missed = `Classes missed cannot exceed the total classes (${totalClasses}).`;
     }
 
     if (!errors.conducted && !errors.missed && missVal > condVal) {
@@ -176,6 +180,22 @@ function AttendanceBalancer() {
                 setCredits(cred);
                 // Reset calculated state if credits change to ensure fresh calculate click
                 setCalculated(false);
+                // Dynamically cap existing inputs to the new limit
+                const newTotal = CREDIT_MAPPINGS[cred];
+                setConducted((prev) => {
+                  if (prev !== '') {
+                    const val = parseInt(prev, 10);
+                    if (val > newTotal) return String(newTotal);
+                  }
+                  return prev;
+                });
+                setMissed((prev) => {
+                  if (prev !== '') {
+                    const val = parseInt(prev, 10);
+                    if (val > newTotal) return String(newTotal);
+                  }
+                  return prev;
+                });
               }}
               className={`flex-1 text-center py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 cursor-pointer ${
                 credits === cred
@@ -220,6 +240,7 @@ function AttendanceBalancer() {
                 <input
                   type="number"
                   min="1"
+                  max={totalClasses}
                   step="1"
                   placeholder="e.g. 24"
                   value={conducted}
@@ -249,6 +270,7 @@ function AttendanceBalancer() {
                 <input
                   type="number"
                   min="0"
+                  max={conducted !== '' ? Math.min(totalClasses, parseInt(conducted, 10)) : totalClasses}
                   step="1"
                   placeholder="e.g. 4"
                   value={missed}
@@ -346,7 +368,7 @@ function AttendanceBalancer() {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Awaiting Analysis</h3>
               <p className="text-gray-400 text-sm max-w-sm leading-relaxed">
-                Enter your current attendance details in the form on the left and click **Calculate** to see a full balancing breakdown and action plan.
+                Enter your current attendance details in the form on the left and click Calculate to see a full balancing breakdown and action plan.
               </p>
             </div>
           ) : (
