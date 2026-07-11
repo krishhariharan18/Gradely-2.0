@@ -231,7 +231,7 @@ function AttendanceBalancer() {
             <h2 className="text-2xl font-bold text-white mb-2">Enter Your Current Attendance</h2>
             <p className="text-sm text-gray-400 mb-6">Input current conducted classes and missed classes to calculate your stand.</p>
 
-            <form onSubmit={handleCalculate} className="space-y-5">
+            <form onSubmit={handleCalculate} className="space-y-5" noValidate>
               {/* Conducted Classes Field */}
               <div>
                 <label className="block text-sm font-semibold text-gray-300 mb-2">
@@ -255,10 +255,10 @@ function AttendanceBalancer() {
                   className={getInputClass(conducted, 'conducted')}
                 />
                 {hasError('conducted') && (
-                  <span className="text-xs font-semibold text-red-400 mt-1.5 block flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    {validationErrors.conducted}
-                  </span>
+                  <div className="flex items-center gap-2 px-3.5 py-2.5 mt-2.5 bg-red-500/10 border border-red-500/25 rounded-xl text-xs font-semibold text-red-200 shadow-[0_0_12px_rgba(239,68,68,0.15)] animate-fadeIn">
+                    <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    <span>{validationErrors.conducted}</span>
+                  </div>
                 )}
               </div>
 
@@ -285,10 +285,10 @@ function AttendanceBalancer() {
                   className={getInputClass(missed, 'missed')}
                 />
                 {hasError('missed') && (
-                  <span className="text-xs font-semibold text-red-400 mt-1.5 block flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    {validationErrors.missed}
-                  </span>
+                  <div className="flex items-center gap-2 px-3.5 py-2.5 mt-2.5 bg-red-500/10 border border-red-500/25 rounded-xl text-xs font-semibold text-red-200 shadow-[0_0_12px_rgba(239,68,68,0.15)] animate-fadeIn">
+                    <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    <span>{validationErrors.missed}</span>
+                  </div>
                 )}
               </div>
 
